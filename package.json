@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "eth-to-dai-rinkeby2": "node --experimental-modules ./EthToDaiRinkeby2.mjs",
+    "eth-to-dai-rinkeby3": "node --experimental-modules ./EthToDaiRinkeby3.mjs",
     "eth-to-dai-rinkeby": "node --experimental-modules ./EthToDaiRinkeby.mjs",
     "approve-dai-exchange-rinkeby": "node --experimental-modules ./approveDaiExchangeRinkeby.mjs",
     "dai-to-eth-rinkeby": "node --experimental-modules ./DaiToEthRinkeby.mjs"

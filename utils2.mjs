@@ -49,3 +49,26 @@ export const sendSignedTx = (transactionObject) =>{
         }, 1000 * sleepSec );
 
  */
+
+export function info2(array){
+    let diff 
+    if( array === undefined ){
+        diff = 60
+    }    
+    else{
+        diff = array[0] ; // array[0]
+    }
+    console.log('sleep (secs): ', diff);
+    var d = new Date()
+    d.setHours(d.getHours() + 7 )
+
+    console.log(d, ' now')
+
+    //console.log(d.getTime())
+    d.setSeconds(d.getSeconds() + diff)
+    
+    console.log(d,' next')
+	
+    console.log('')
+
+} 
