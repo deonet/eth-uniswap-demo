@@ -7,6 +7,7 @@
     "eth-to-dai-rinkeby3": "node --experimental-modules ./EthToDaiRinkeby3.mjs",
     "eth-to-dai-rinkeby": "node --experimental-modules ./EthToDaiRinkeby.mjs",
     "approve-dai-exchange-rinkeby": "node --experimental-modules ./approveDaiExchangeRinkeby.mjs",
+    "dai-to-eth-rinkeby2": "node --experimental-modules ./DaiToEthRinkeby2.mjs",
     "dai-to-eth-rinkeby": "node --experimental-modules ./DaiToEthRinkeby.mjs"
   },
   "dependencies": {
