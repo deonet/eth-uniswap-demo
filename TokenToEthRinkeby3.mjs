@@ -1,7 +1,28 @@
+import EthTx from 'ethereumjs-tx'
+
+import FileSync from 'lowdb/adapters/FileSync.js';
+import lowdb from 'lowdb'
+let db = lowdb(new FileSync('dbSold.json'));
+
+let size2 = 
+db.get('posts')
+  .size()
+  .value()
+
+console.log('size',size2)
+
+//db.get('posts')
+//  .push({ id: 1, title: 'lowdb is awesome'})
+//  .write()
+//db.defaults({ posts: [], })
+//  .write()
+
 import UniswapV2Abi from "./IUniswapV2Router02.mjs";
 
 import { web3, sendSignedTx } from "./utils.mjs";
-import { daiExchangeAddress, addressFrom, daiExchangeAbi } from "./constants.mjs";
+import { 
+    privKey ,
+    daiExchangeAddress, addressFrom, daiExchangeAbi } from "./constants.mjs";
 
 let daiTokenAddress = "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
 
@@ -45,9 +66,40 @@ const tokenToEthEncodedABI2 = uniswapV2Contract.methods
     from: addressFrom,
 });	
 
+const sendSignedTx2 = (transactionObject) =>{
+    let transaction = new EthTx.Transaction(transactionObject, {'chain':'rinkeby'})
+    const privateKey = Buffer.from(privKey, "hex")
+    transaction.sign(privateKey)
+    const serializedEthTx = transaction.serialize().toString("hex")
+    web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
+    .on("transactionHash", async (hash) => {
+        console.log(
+            `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
+                hash
+            )}`
+        );
+        db.get('posts')
+        .push({ 
+            hash :  hash ,
+        })
+        .write()
+
+    })
+    .on("receipt", (receipt) => {
+        console.log(
+            `transaction received on the network`
+        );
+        //info2([sleepSec])
+        //setTimeout(() => {getBal() }, 1000 * sleepSec );
+
+    });
+}
+
 const sendTransaction = async () => {
 
-    const transactionNonce = await web3.eth.getTransactionCount(addressFrom)
+    let transactionNonce = -1
+
+    transactionNonce = await web3.eth.getTransactionCount(addressFrom)
     
     const transactionObject = {
         nonce: web3.utils.toHex(transactionNonce),
@@ -59,7 +111,9 @@ const sendTransaction = async () => {
     };
 
     try {
-        sendSignedTx(transactionObject)
+        if (transactionNonce > -1 ) {
+            sendSignedTx2(transactionObject)            
+        }
     } catch (err) {
         console.error(err)
     }
