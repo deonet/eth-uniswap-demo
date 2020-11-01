@@ -17,6 +17,89 @@ console.log('size',size2)
 //db.defaults({ posts: [], })
 //  .write()
 
+let db1 =
+'C:/Users/gold1tb/Documents/GitHub/a02/uniswap-skim-a01/public/db2.json';
+db1 = lowdb(new FileSync(db1));
+
+Date.prototype.addHours = function(h) {
+  this.setTime(this.getTime() + (h*60*60*1000));
+  return this;
+}
+
+Date.prototype.addMinutez = function(m) {
+  this.setTime(this.getTime() + (m*60*1000));
+  return this;
+}
+
+
+const getNewT = async (params) => {
+    db.read()
+
+    db1.read()
+    //console.log('db1 State has been updated')
+
+    let tokens1 = 
+    db1.get('tokens')
+    .size()
+    .value();
+    console.log('tokens',tokens1)
+
+    for (let index = 0; index < 5; index++) {
+        //const element = array[index];
+
+        let a = db1.get('tokens[' + ((tokens1-1)-index) + ']')
+        .value();
+        //console.log('token: ', a )
+
+        var splitted = a.inputDt.replace(' ',":").split(":", 100 ); 
+        //console.log(splitted)    
+
+        var d1 = new Date().addMinutez((7*60)+0);
+        //console.log('date now: ', d1)
+
+        let unix_timestamp = 1549312452
+        // Create a new JavaScript Date object based on the timestamp
+        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+        var d2 = new Date(unix_timestamp * 1000);
+        var d3 = new Date().addHours(0);
+        d3.setHours(splitted[3]*1);
+        d3.setMinutes(splitted[4]*1);
+        d3 = d3.addMinutez((7*60)+10);
+        
+        //console.log('date input: ', d3)
+        //console.log('date <> ', d1 > d3 )
+        var action2 = d1 > d3;
+        var addressUniq0 = a['addressUniq']
+        var title0 = a['title']
+
+        let arrayData5 = db.get('posts')
+        .filter({
+            token0: addressUniq0 ,
+        })
+        .sortBy('token')
+        .take(5000)
+        .value()
+
+        //console.log(arrayData5.length)
+        if (arrayData5.length == 0) {
+            break;
+        }else{
+            action2 = false
+        }
+        
+    }
+    let arrayData3 = []
+    arrayData3['addressUniq'] = addressUniq0
+    arrayData3['title'] = title0
+    arrayData3['action'] = action2
+    
+    return arrayData3
+
+}
+
+
+
+
 import UniswapV2Abi from "./IUniswapV2Router02.mjs";
 
 import { web3, info2 } from "./utils2.mjs";
@@ -67,7 +150,13 @@ Object.size = function(obj) {
     return size;
 };
 
-const sendSignedTx2 = (transactionObject) =>{
+const sendSignedTx2 = (transactionObject,params) =>{
+
+    console.log(params)
+
+    let tokenName = params['title']
+    let token0 = params['addressUniq']
+
     let transaction = new EthTx.Transaction(transactionObject, {'chain':'rinkeby'})
     const privateKey = Buffer.from(privKey, "hex")
     transaction.sign(privateKey)
@@ -99,6 +188,8 @@ const sendSignedTx2 = (transactionObject) =>{
         );
 
         let newData = { 
+            tokenName : tokenName ,
+            token0 : token0 ,
             token : TokenContractAddress2 ,
             tokenValue : value2
         };
@@ -127,7 +218,7 @@ const sendSignedTx2 = (transactionObject) =>{
      */
 }
 
-const sendTransaction = async () => {
+const sendTransaction = async (params) => {
 
     const tokenToEthEncodedABI2 = uniswapV2Contract.methods
     .swapExactTokensForETH(
@@ -154,7 +245,7 @@ const sendTransaction = async () => {
 
     try {
         if (transactionNonce > -1 ) {
-            sendSignedTx2(transactionObject)            
+            sendSignedTx2(transactionObject, params)            
         }
     } catch (err) {
         console.error(err)
@@ -163,6 +254,8 @@ const sendTransaction = async () => {
 
 const getTBal = async (array) => {
 
+    var data = await getNewT();
+    
     var AddressFrom = addressFrom   
     var contractAddr = daiTokenAddress   
     var tknAddress = (addressFrom).substring(2)    
@@ -184,7 +277,13 @@ const getTBal = async (array) => {
             let jualT = web3.utils.fromWei(tokens, 'ether')   
             //console.log( (jualT * 1) * (percenJual/100) )
 
-            sendTransaction()
+            data['contractAddr'] = contractAddr 
+            if(data.action){
+                sendTransaction(data)
+            }else{
+                info2([sleepSec]) 
+                setTimeout(() => { getTBal() }, 1000 * sleepSec )
+            }
 			
         }
         else {
@@ -194,6 +293,7 @@ const getTBal = async (array) => {
 }
 
 //sendTransaction()
-getTBal()
 //info2([sleepSec])
+getTBal()
+
 
