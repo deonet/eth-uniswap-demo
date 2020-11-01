@@ -19,10 +19,11 @@ console.log('size',size2)
 
 import UniswapV2Abi from "./IUniswapV2Router02.mjs";
 
-import { web3, sendSignedTx } from "./utils.mjs";
+import { web3, info2 } from "./utils2.mjs";
 import { 
+    sleepSec ,
     privKey ,
-    daiExchangeAddress, addressFrom, daiExchangeAbi } from "./constants.mjs";
+    daiExchangeAddress, addressFrom, daiExchangeAbi } from "./constants2.mjs";
 
 let daiTokenAddress = "0x1f9840a85d5af5bf1d1762f925bdaddc4201f984"
 
@@ -41,7 +42,8 @@ const TokenContractAddress2 = path2
 
 const uniswapV2Contract = new web3.eth.Contract(UniswapV2Abi, UniswapV2ContractAddress);
 
-const TOKENS_SOLD = web3.utils.toHex(1 * 10 ** 18); // 0.4DAI
+let value2 = 10
+const TOKENS_SOLD = web3.utils.toHex(value2 * 10 ** 18); // 0.4DAI
 const MIN_ETH = web3.utils.toHex(5000000000000); // 0.005ETH
 const DEADLINE = 1682393932;
 
@@ -55,16 +57,15 @@ const MinimumTokens = web3.utils.toHex(
 
 /**
  * Function: swapExactTokensForETH(uint256 amountIn, uint256 amountOutMin, address[] path, address to, uint256 deadline)
- */
-const tokenToEthEncodedABI2 = uniswapV2Contract.methods
-.swapExactTokensForETH(
-    TOKENS_SOLD ,
-    MinimumTokens, [TokenContractAddress2 , WETHContractAddress], addressFrom, 
-    Math.floor((Date.now() + 100000) / 1000)
-)
-.encodeABI({
-    from: addressFrom,
-});	
+ */	
+
+Object.size = function(obj) {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
 
 const sendSignedTx2 = (transactionObject) =>{
     let transaction = new EthTx.Transaction(transactionObject, {'chain':'rinkeby'})
@@ -78,24 +79,65 @@ const sendSignedTx2 = (transactionObject) =>{
                 hash
             )}`
         );
-        db.get('posts')
-        .push({ 
-            hash :  hash ,
-        })
-        .write()
-
     })
     .on("receipt", (receipt) => {
+       
+        let arrayData2 = db.get('posts')
+        .filter({
+            token: TokenContractAddress2 ,
+        })
+        .sortBy('token')
+        .take(5000)
+        .value()
+
+        if (arrayData2) {
+            console.log(arrayData2.length )            
+        }
+
         console.log(
             `transaction received on the network`
         );
-        //info2([sleepSec])
-        //setTimeout(() => {getBal() }, 1000 * sleepSec );
 
-    });
+        let newData = { 
+            token : TokenContractAddress2 ,
+            tokenValue : value2
+        };
+
+        for (let key in receipt) {
+            let value = receipt[key];
+            // Use `key` and `value`
+            //console.log(key);console.log(' => ' , (typeof value) )
+            if('object' !== (typeof value) ){
+                newData["" + key ] = (value) 
+            }
+        }
+        //newA.push({productId : 1 , price : 100 , discount : 10});
+
+        db.get('posts')
+        .push(newData)
+        .write()
+
+        info2([sleepSec]) 
+        setTimeout(() => { getTBal() }, 1000 * sleepSec )
+
+    });    
+    /**
+     * 
+    .on('receipt', console.log);
+     */
 }
 
 const sendTransaction = async () => {
+
+    const tokenToEthEncodedABI2 = uniswapV2Contract.methods
+    .swapExactTokensForETH(
+        TOKENS_SOLD ,
+        MinimumTokens, [TokenContractAddress2 , WETHContractAddress], addressFrom, 
+        Math.floor((Date.now() + 100000) / 1000)
+    )
+    .encodeABI({
+        from: addressFrom,
+    });
 
     let transactionNonce = -1
 
@@ -153,3 +195,5 @@ const getTBal = async (array) => {
 
 //sendTransaction()
 getTBal()
+//info2([sleepSec])
+
