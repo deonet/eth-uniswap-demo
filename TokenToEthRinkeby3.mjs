@@ -9,16 +9,17 @@ db.get('posts')
   .size()
   .value()
 
-console.log('size',size2)
+console.log('dbSold size',size2)
 
-//db.get('posts')
-//  .push({ id: 1, title: 'lowdb is awesome'})
-//  .write()
-//db.defaults({ posts: [], })
-//  .write()
+db.get('posts')
+  .push({ id: 1, title: 'lowdb is awesome'})
+  .write()
+
+db.defaults({ posts: [], })
+  .write()
 
 let db1 =
-'C:/Users/gold1tb/Documents/GitHub/a02/uniswap-skim-a01/public/db2.json';
+'C:/g/uniswap-skim/public/db2.json';
 db1 = lowdb(new FileSync(db1));
 
 Date.prototype.addHours = function(h) {
@@ -42,32 +43,35 @@ const getNewT = async (params) => {
     db1.get('tokens')
     .size()
     .value();
-    console.log('tokens',tokens1)
+    console.log('tokens size =',tokens1)
 
-    for (let index = 0; index < 5; index++) {
-        //const element = array[index];
+    var d1 = new Date().addMinutez((7*60)+0);
+    console.log(d1 , ' current time +7')
 
-        let a = db1.get('tokens[' + ((tokens1-1)-index) + ']')
+    var countD = 5
+
+    for (let index = 0; index < countD; index++) {
+        const el = (tokens1 - countD) + index  ;
+        console.log('token[]', el )
+
+        let a = db1.get('tokens[' + el + ']')
         .value();
-        //console.log('token: ', a )
 
-        var splitted = a.inputDt.replace(' ',":").split(":", 100 ); 
+        console.log('token db1: ', a.title )
+
+        //var splitted = a.inputDt.replace(' ',":").split(":", 100 ); 
         //console.log(splitted)    
-
-        var d1 = new Date().addMinutez((7*60)+0);
-        //console.log('date now: ', d1)
-
-        let unix_timestamp = 1549312452
-        // Create a new JavaScript Date object based on the timestamp
-        // multiplied by 1000 so that the argument is in milliseconds, not seconds.
-        var d2 = new Date(unix_timestamp * 1000);
-        var d3 = new Date().addHours(0);
-        d3.setHours(splitted[3]*1);
-        d3.setMinutes(splitted[4]*1);
-        d3 = d3.addMinutez((7*60)+10);
+        //var d3 = new Date().addHours(0);
+        //d3.setHours(splitted[3]*1);
+        //d3.setMinutes(splitted[4]*1);
+        //d3 = d3.addMinutez((7*60)+10);
+        var d3 = new Date(a.inputDt);
+        d3.addHours(7);         
+        console.log(d3 , ' input date')
+        d3.addMinutez(10);         
+        console.log(d3 , ' target sell after 10 minutes')
         
         //console.log('date input: ', d3)
-        //console.log('date <> ', d1 > d3 )
         var action2 = d1 > d3;
         var addressUniq0 = a['addressUniq']
         var title0 = a['title']
@@ -84,7 +88,9 @@ const getNewT = async (params) => {
         if (arrayData5.length == 0) {
             break;
         }else{
-            action2 = false
+            console.log('sold already @ ', 
+                arrayData5[0].transactionHash );
+            action2 = false ;
         }
         
     }
@@ -92,6 +98,8 @@ const getNewT = async (params) => {
     arrayData3['addressUniq'] = addressUniq0
     arrayData3['title'] = title0
     arrayData3['action'] = action2
+
+    console.log( arrayData3 )
     
     return arrayData3
 
@@ -170,18 +178,6 @@ const sendSignedTx2 = (transactionObject,params) =>{
         );
     })
     .on("receipt", (receipt) => {
-       
-        let arrayData2 = db.get('posts')
-        .filter({
-            token: TokenContractAddress2 ,
-        })
-        .sortBy('token')
-        .take(5000)
-        .value()
-
-        if (arrayData2) {
-            console.log(arrayData2.length )            
-        }
 
         console.log(
             `transaction received on the network`
@@ -264,7 +260,7 @@ const getTBal = async (array) => {
     console.log('Getting contract tokens balance.....')
     console.log("My Address: " + AddressFrom )
     console.log("Token address : " + contractAddr)
-    console.log('sell token to address: ', daiExchangeAddress )
+    //console.log('sell token to address: ', daiExchangeAddress )
 
     await web3.eth.call({
         to: contractAddr, // Contract address, used call the token balance of the address in question
@@ -279,6 +275,7 @@ const getTBal = async (array) => {
 
             data['contractAddr'] = contractAddr 
             if(data.action){
+                console.log('data.action =' , data.action)
                 sendTransaction(data)
             }else{
                 info2([sleepSec]) 
