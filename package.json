@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "eth2token": "node --experimental-modules ./eth2token.mjs",
     "eth-to-dai-rinkeby3": "node --experimental-modules ./EthToDaiRinkeby3.mjs",
     "eth-to-dai-rinkeby": "node --experimental-modules ./EthToDaiRinkeby.mjs",
     "approve-dai-exchange-rinkeby": "node --experimental-modules ./approveDaiExchangeRinkeby.mjs",
