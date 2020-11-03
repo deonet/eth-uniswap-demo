@@ -73,6 +73,8 @@ const sendTransaction = async (array) => {
             ETH_SOLDgwei.toString() ,'ether')  );
 
     //const transactionNonce = await web3.eth.getTransactionCount(addressFrom)
+
+    console.log('send to contract',daiExchangeAddress)
     
     web3.eth.getTransactionCount(addressFrom, function(err, transactionNonce ){
         if (!err) {
