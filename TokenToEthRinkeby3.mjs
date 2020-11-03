@@ -19,7 +19,7 @@ db.defaults({ posts: [], })
   .write()
 
 let db1 =
-'C:/g/uniswap-skim/public/db2.json';
+'C:/Users/gold1tb/Documents/GitHub/a02/uniswap-skim/public/db2.json';
 db1 = lowdb(new FileSync(db1));
 
 Date.prototype.addHours = function(h) {
@@ -46,8 +46,6 @@ const getNewT = async (params) => {
     console.log('tokens size =',tokens1)
 
     var d1 = new Date().addMinutez((7*60)+0);
-    console.log(d1 , ' current time +7')
-
     var countD = 5
 
     for (let index = 0; index < countD; index++) {
@@ -70,6 +68,7 @@ const getNewT = async (params) => {
         console.log(d3 , ' input date')
         d3.addMinutez(10);         
         console.log(d3 , ' target sell after 10 minutes')
+        console.log(d1 , ' current time +7')
         
         //console.log('date input: ', d3)
         var action2 = d1 > d3;
