@@ -1,1 +1,1 @@
-cmd /k 
+cmd /k npm run t2e3
