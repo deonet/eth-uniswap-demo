@@ -170,7 +170,9 @@ async function what2() {
         
         let DateFriendly = new Date(element2.inputDt)
 
-        console.log( element , element2.addressUniq , compare1.length 
+        console.log( element , element2.addressUniq , 
+          compare1.length ,
+          element2.title
         ) ;
           
         let action2
