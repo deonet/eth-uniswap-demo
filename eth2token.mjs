@@ -93,7 +93,7 @@ function where() {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve('in the shadows');
-      }, 1000 * (sleepSec/10) );
+      }, 1000 * (sleepSec/1) );
     });
 }
   
