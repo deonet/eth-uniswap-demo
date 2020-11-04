@@ -55,7 +55,7 @@ async function what(array) {
             
           if (compare1.length===0) {
             console.log(DateFriendly.addMinutez(7*60),'@ input');
-            console.log(DateFriendly.addMinutez(5) , '@ target buy');
+            console.log(DateFriendly.addMinutez(10) , '@ target buy');
             let current1 = new Date().addMinutez(7*60)
             let action2 = current1 > DateFriendly  
             console.log(current1,'@ current +7',action2);
@@ -66,9 +66,13 @@ async function what(array) {
             obj2.inputDt = Date.now() ;
             obj2.title = element2.title ;
             obj2.inputDtSkim = element2.inputDt ;
-            db2.get('posts')
-                .push( obj2 )
-                .write() ;
+            
+			if(action2){
+				db2.get('posts')
+					.push( obj2 )
+					.write() ;
+			}
+				
                 break;           
           }else{
             //console.log( compare1.length ) ;
