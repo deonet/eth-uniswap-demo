@@ -24,7 +24,7 @@ function who() {
 
     return new Promise(resolve => {
       setTimeout(() => {
-        resolve('joker');
+        resolve('Alligator.io');
       }, 200 );
     });
   }
@@ -47,14 +47,25 @@ async function what(array) {
             .sortBy('addressUniq')
             .take(50)
             .value();
+          
+          let DateFriendly = new Date(element2.inputDt)
 
-          console.log( element , element2.addressUniq , compare1.length ) ;
+          console.log( element , element2.addressUniq , compare1.length 
+          ) ;
             
           if (compare1.length===0) {
-            //console.log( compare1.length ) ;
+            console.log(DateFriendly.addMinutez(7*60),'@ input');
+            console.log(DateFriendly.addMinutez(5) , '@ target buy');
+            let current1 = new Date().addMinutez(7*60)
+            let action2 = current1 > DateFriendly  
+            console.log(current1,'@ current +7',action2);
+            //console.log();              
+            
+              //console.log( compare1.length ) ;
             obj2.addressUniq = element2.addressUniq ;
             obj2.inputDt = Date.now() ;
             obj2.title = element2.title ;
+            obj2.inputDtSkim = element2.inputDt ;
             db2.get('posts')
                 .push( obj2 )
                 .write() ;
