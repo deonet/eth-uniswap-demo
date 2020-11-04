@@ -144,6 +144,7 @@ function who() {
   }
 
 async function what2() {
+  db.read();
     let tokens1 = await 
     db.get('tokens')
     .size()
