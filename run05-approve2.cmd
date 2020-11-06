@@ -1,2 +1,2 @@
-echo npm run appr2
+TITLE npm run appr2
 cmd /k
