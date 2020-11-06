@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {    
-    "appr2": "node --experimental-modules ./approveExchange2.mjs",
+    "appr2": "title npm run appr2 && node --experimental-modules ./approveExchange2.mjs",
     "e2t": "node --experimental-modules ./EthToToken.mjs",
     "eth2token": "node --experimental-modules ./eth2token.mjs",
     "eth-to-dai-rinkeby3": "node --experimental-modules ./EthToDaiRinkeby3.mjs",
