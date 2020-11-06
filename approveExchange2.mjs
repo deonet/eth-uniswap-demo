@@ -21,7 +21,7 @@ const daiTokenContract = new web3.eth.Contract(
     daiTokenAddress2
   );
 
-let approveUnit=989;
+let approveUnit=979;
 
   const TOKENS = web3.utils.toHex(approveUnit * 10 ** 18); // 1 DAI
 
@@ -34,26 +34,33 @@ const sendSignedTx2 = (transactionObject,params) =>{
     const privateKey = Buffer.from(privKey, "hex")
     transaction.sign(privateKey)
     const serializedEthTx = transaction.serialize().toString("hex")
-    web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
-    .on("transactionHash", async (hash) => {
-        console.log(
-            `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
-                hash
-            )}`
-        );
-        let obj={};
-        obj.hash = hash ;
-        obj.addressUniq = params.addressUniq ;
-        obj.addressUniq2 = params.addressUniq2 ;
-        db.get('posts').push( obj ).write();
-    })
-    .on("receipt", (receipt) => {
-        console.log(
-            `transaction received on the network`
-        );
-        setTimeout(() => { 
-          sendTransaction() ;}, 1000 * (60*5) );
-    });
+
+  try {
+        
+          web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
+          .on("transactionHash", async (hash) => {
+              console.log(
+                  `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
+                      hash
+                  )}`
+              );
+          })
+          .on("receipt", (receipt) => {
+              console.log(
+                  `transaction received on the network`
+              );
+              let obj={};
+              obj.transactionHash = receipt.transactionHash ;
+              obj.addressUniq = params.addressUniq ;
+              obj.addressUniq2 = params.addressUniq2 ;
+              db.get('posts').push( obj ).write();
+              setTimeout(() => { 
+                sendTransaction() ;}, 1000 * (60*5) );
+          });
+  
+  } catch (error) {    
+  }
+
 }
 
 function getTokenAddress() {
@@ -101,9 +108,13 @@ async function getSkim(){
           .take(50)
           .value();
 
+      let logs2='';
+      logs2=logs2 + element + ' '; 
+
       if (compare1.length===0) {
-        console.log(element2.addressUniq,'');      
-        console.log('blm');
+        console.log( logs2,'');      
+        //console.log(element2.addressUniq,'');      
+        //console.log('blm');
         return new Promise(resolve => {
           setTimeout(() => {
             resolve(element2);
@@ -111,9 +122,16 @@ async function getSkim(){
         });
         break;
       }
-      console.log(element2,'element2');      
+      logs2=logs2 + element2.title + ' '; 
+      logs2=logs2 + '\r\n ' + element2.addressUniq + ' '; 
+      console.log( logs2,'');      
     }
-    resolve(false);
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(false);
+      }, 1000 * (5) );
+    });
 }
 
 function getApproveEncodedABI(daiTokenAddress2) {
@@ -161,22 +179,14 @@ const sendTransaction = async () => {
 
       if (transactionNonce == -1)isSendSignedTx=false;
 
-      let params1 = action2 ;
-      /**
-      {
-        addressUniq: '0xb3143c3959427fa1835758f2f985aa31d1c6863e',
-        title: 'Betfluencer',
-        inputDt: 1604645300875
-      };
-       * 
-       */
-      params1.addressUniq2 = daiTokenAddress2 ;
-
     try{
       if (isSendSignedTx) {
+        let params1 = action2 ;
+        params1.addressUniq2 = daiTokenAddress2 ;  
         sendSignedTx2(transactionObject,params1);        
-        //setTimeout(() => { 
-        //sendTransaction() ;}, 1000 * (60*5) );
+      }else{
+        setTimeout(() => { 
+        sendTransaction() ;}, 1000 * (60*5) );
       }
     }catch(err){
         console.error(err)
