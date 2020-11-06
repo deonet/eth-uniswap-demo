@@ -10,7 +10,7 @@ import {
     daiExchangeAbi, daiExchangeAddress, addressFrom, infuraURL } from './constants.mjs';
 import { sendSignedTx, web3 } from './utils.mjs';
 
-const sleepSec=6*1
+const sleepSec=6*1;
 
 let db =
 'C:/Users/gold1tb/Documents/GitHub/a02/uniswap-skim/public/db2.json';
@@ -47,7 +47,10 @@ const sendSignedTx2 = async (array) => {
     let transaction = new EthTx.Transaction(transactionObject, {'chain':'rinkeby'})
     const privateKey = Buffer.from(privKey, "hex")
     transaction.sign(privateKey)
-    const serializedEthTx = transaction.serialize().toString("hex")
+    const serializedEthTx = transaction.serialize().toString("hex");
+
+  try {      
+
     web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
     .on("transactionHash", async (hash) => {
         console.log(
@@ -74,9 +77,14 @@ const sendSignedTx2 = async (array) => {
             `transaction received on the network`
         );
         setTimeout(() => { msg();
-        }, 1000 * (sleepSec) );
-    
+        }, 1000 * (sleepSec) );    
     });
+
+  } catch (error) {
+      setTimeout(() => { msg();
+      }, 1000 * (sleepSec) );          
+  }
+
 }
 
 const sendTransaction = async (params) => {
