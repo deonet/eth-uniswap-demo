@@ -10,10 +10,9 @@ import {
     daiExchangeAbi, daiExchangeAddress, addressFrom, infuraURL } from './constants.mjs';
 import { sendSignedTx, web3 } from './utils.mjs';
 
-const sleepSec=6*1;
+const sleepSec=60*1;
 
-let db =
-'C:/Users/gold1tb/Documents/GitHub/a02/uniswap-skim/public/db2.json';
+let db = '../uniswap-skim/public/db2.json';
 db = lowdb(new FileSync(db));
 
 let db2 = 'dbBuy2.json';
@@ -186,7 +185,7 @@ async function what2() {
         let action2
 
         if (compare1.length===0) {
-          console.log(DateFriendly.addMinutez(7*60),'@ input');
+          console.log(DateFriendly.addMinutez(0),'@ input');
           console.log(DateFriendly.addMinutez(10) , '@ target buy');
           let current1 = new Date().addMinutez(7*60)
           action2 = current1 > DateFriendly  
