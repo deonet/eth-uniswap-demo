@@ -1,3 +1,9 @@
+import * as fs from "fs";
+let student=JSON.parse(fs.readFileSync(
+'C:/data2/secret3.txt'));
+//console.log(student);
+const public2 = student.public;
+
 import FileSync from 'lowdb/adapters/FileSync.js';
 import lowdb from 'lowdb' ;
 let db = lowdb(new FileSync('dbAppr.json'));
@@ -96,7 +102,7 @@ function getTokenAddress() {
 async function getSkim(){
   db.read();
   
-  let dbSkim ='../uniswap-skim/public/db2.json';
+  let dbSkim=public2 + 'db2.json';
   dbSkim = lowdb(new FileSync(dbSkim));
     
     dbSkim.read();
