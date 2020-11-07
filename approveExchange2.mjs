@@ -38,6 +38,11 @@ const sendSignedTx2 = (transactionObject,params) =>{
   try {
         
           web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
+          .on('error', function name1(params) {
+            console.log('eror 01');   
+              setTimeout(() => { 
+                sendTransaction() ;}, 1000 * (sleepSec) );
+          })
           .on("transactionHash", async (hash) => {
               console.log(
                   `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
