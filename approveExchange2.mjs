@@ -64,7 +64,10 @@ const sendSignedTx2 = (transactionObject,params) =>{
                 sendTransaction() ;}, 1000 * (sleepSec) );
           });
   
-  } catch (error) {    
+  } catch (error) { 
+    console.log('eror');   
+    setTimeout(() => { 
+      sendTransaction() ;}, 1000 * (sleepSec) );
   }
 
 }
