@@ -54,8 +54,14 @@ const sendSignedTx2 = (transactionObject,params) =>{
               obj.addressUniq = params.addressUniq ;
               obj.addressUniq2 = params.addressUniq2 ;
               db.get('posts').push( obj ).write();
+              
+              var sleepSec=60*1;
+              let dt=new Date();
+              dt.setMinutes(dt.getMinutes() + (sleepSec/60) );
+              console.log(dt,'sleep');
+              console.log(dt.getMinutes(),'sleep');
               setTimeout(() => { 
-                sendTransaction() ;}, 1000 * (60*5) );
+                sendTransaction() ;}, 1000 * (sleepSec) );
           });
   
   } catch (error) {    
@@ -82,8 +88,7 @@ function getTokenAddress() {
 async function getSkim(){
   db.read();
   
-  let dbSkim =
-'C:/Users/gold1tb/Documents/GitHub/a02/uniswap-skim/public/db2.json';
+  let dbSkim ='../uniswap-skim/public/db2.json';
   dbSkim = lowdb(new FileSync(dbSkim));
     
     dbSkim.read();
@@ -186,7 +191,7 @@ const sendTransaction = async () => {
         sendSignedTx2(transactionObject,params1);        
       }else{
         setTimeout(() => { 
-        sendTransaction() ;}, 1000 * (60*5) );
+        sendTransaction() ;}, 1000 * (60*1) );
       }
     }catch(err){
         console.error(err)
