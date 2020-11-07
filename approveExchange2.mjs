@@ -36,6 +36,8 @@ let approveUnit=979;
   const approveEncodedABI = daiTokenContract.methods.approve(daiExchangeAddress2, TOKENS).encodeABI();
 
 const sendSignedTx2 = (transactionObject,params) =>{
+      var sleepSec=60*1;
+
     let transaction = new EthTx.Transaction(transactionObject, {'chain':'rinkeby'})
     const privateKey = Buffer.from(privKey, "hex")
     transaction.sign(privateKey)
@@ -66,7 +68,6 @@ const sendSignedTx2 = (transactionObject,params) =>{
               obj.addressUniq2 = params.addressUniq2 ;
               db.get('posts').push( obj ).write();
               
-              var sleepSec=60*1;
               let dt=new Date();
               dt.setMinutes(dt.getMinutes() + (sleepSec/60) );
               console.log(dt,'sleep');
