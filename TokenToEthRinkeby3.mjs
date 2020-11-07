@@ -1,8 +1,14 @@
+import * as fs from "fs";
+let student=JSON.parse(fs.readFileSync(
+'C:/data2/secret3.txt'));
+//console.log(student);
+const public2 = student.public;
+
 import EthTx from 'ethereumjs-tx'
 
 import FileSync from 'lowdb/adapters/FileSync.js';
 import lowdb from 'lowdb'
-let db = lowdb(new FileSync('dbSold.json'));
+let db = lowdb(new FileSync(public2 + 'dbSold.json'));
 
 let size2 = 
 db.get('posts')
@@ -18,8 +24,7 @@ db.get('posts')
 db.defaults({ posts: [], })
   .write()
 
-let db1 =
-'C:/Users/gold1tb/Documents/GitHub/a02/uniswap-skim/public/db2.json';
+let db1=public2 + 'db2.json';
 db1 = lowdb(new FileSync(db1));
 
 Date.prototype.addHours = function(h) {
@@ -66,8 +71,8 @@ const getNewT = async (params) => {
         var d3 = new Date(a.inputDt);
         d3.addHours(7);         
         console.log(d3 , ' input date')
-        d3.addMinutez(10);         
-        console.log(d3 , ' target sell after 10 minutes')
+        d3.addMinutez(20);         
+        console.log(d3 , ' target sell after 20 minutes')
         console.log(d1 , ' current time +7')
         
         //console.log('date input: ', d3)
