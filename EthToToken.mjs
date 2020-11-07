@@ -1,3 +1,9 @@
+import * as fs from "fs";
+let student=JSON.parse(fs.readFileSync(
+'C:/data2/secret3.txt'));
+//console.log(student);
+const public2 = student.public;
+
 import FileSync from 'lowdb/adapters/FileSync.js';
 import lowdb from 'lowdb'
 
@@ -12,10 +18,10 @@ import { sendSignedTx, web3 } from './utils.mjs';
 
 const sleepSec=60*1;
 
-let db = '../uniswap-skim/public/db2.json';
+let db = public2 + 'db2.json';
 db = lowdb(new FileSync(db));
 
-let db2 = 'dbBuy2.json';
+let db2 = public2 + 'dbBuy2.json';
 db2 = lowdb(new FileSync(db2));
 
 const daiExchangeContract = new web3.eth.Contract(JSON.parse(daiExchangeAbi), daiExchangeAddress)
@@ -29,8 +35,8 @@ const WETHContractAddress= path1
 
 const uniswapV2Contract = new web3.eth.Contract(UniswapV2Abi, UniswapV2ContractAddress);
 
-const ETH_SOLD = web3.utils.toHex(100000000000000); // 0.1ETH
-const MIN_TOKENS = web3.utils.toHex(0.0000000002 * 10 ** 18); // 0.2 DAI
+const ETH_SOLD = web3.utils.toHex(1000000000000000); // 0.1ETH
+const MIN_TOKENS = web3.utils.toHex(0.00000000002 * 10 ** 18); // 0.2 DAI
 
 Date.prototype.addMinutez = function(m) {
     this.setTime(this.getTime() + (m*60*1000));
