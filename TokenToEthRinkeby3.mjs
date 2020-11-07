@@ -69,7 +69,7 @@ const getNewT = async (params) => {
         //d3.setMinutes(splitted[4]*1);
         //d3 = d3.addMinutez((7*60)+10);
         var d3 = new Date(a.inputDt);
-        d3.addHours(7);         
+        d3.addHours(0);         
         console.log(d3 , ' input date')
         d3.addMinutez(20);         
         console.log(d3 , ' target sell after 20 minutes')
