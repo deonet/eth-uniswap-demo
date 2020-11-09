@@ -16,7 +16,7 @@ import {
     daiExchangeAbi, daiExchangeAddress, addressFrom, infuraURL } from './constants.mjs';
 import { sendSignedTx, web3 } from './utils.mjs';
 
-const sleepSec=60*1;
+const sleepSec=60*2;
 
 let db = public2 + 'db2.json';
 db = lowdb(new FileSync(db));
@@ -81,6 +81,7 @@ const sendSignedTx2 = async (array) => {
         console.log(
             `transaction received on the network`
         );
+        new Timer();
         setTimeout(() => { msg();
         }, 1000 * (sleepSec) );    
     });
@@ -110,29 +111,34 @@ const sendTransaction = async (params) => {
     let transactionNonce = -1 ;
 
     try {
-      transactionNonce = await web3.eth.getTransactionCount(addressFrom)
-      const transactionObject = {
-        nonce: web3.utils.toHex(transactionNonce),
-        gasLimit: web3.utils.toHex(6000000),
-        gasPrice: web3.utils.toHex(10000000000),
-        to: daiExchangeAddress2,
-        from: addressFrom,
-        data: exchangeEncodedABI2,
-        value: ETH_SOLD
-      };
+      transactionNonce = await web3.eth.getTransactionCount(addressFrom);
     } catch (er) {
       console.log('transactionNonce fail')
     }
 
     try{
-        if ( transactionNonce !== -1) {
-            sendSignedTx2([
+      if ( transactionNonce !== -1) {
+
+        const transactionObject = {
+          nonce: web3.utils.toHex(transactionNonce),
+          gasLimit: web3.utils.toHex(6000000),
+          gasPrice: web3.utils.toHex(10000000000),
+          to: daiExchangeAddress2,
+          from: addressFrom,
+          data: exchangeEncodedABI2,
+          value: ETH_SOLD
+        };      
+  
+        console.log('transactionNonce',transactionNonce);
+        sendSignedTx2([
                 transactionObject ,
                 params
-            ])            
+            ]);
         }
     }catch(err){
-        //console.error(err)
+      console.log('catch');
+        console.error(err);
+        
         setTimeout(() => { msg();
         }, 1000 * (sleepSec) );
     }
@@ -231,24 +237,56 @@ async function what2() {
   });
 }
 
+function printProgress(progress){
+  //for (let index = 0; index < 99999; index++) {
+    process.stdout.clearLine();
+    process.stdout.cursorTo(0);
+    process.stdout.write(progress + '' + '');      
+  //}
+}
+
+class Timer {
+  constructor() {
+    this.counter = (((sleepSec-1)*10)*1)  ;
+
+      let intervalId = setInterval(() => {
+          this.counter = this.counter - 1;
+          //console.log(this.counter);
+          printProgress(this.counter);
+          if(this.counter === 0){
+            printProgress('');
+            clearInterval(intervalId);
+          }
+      }, 1000 / 10  )
+  }
+}
+
   async function msg() {
     console.log('')
     console.log('sell eth, buy token')
+    console.log(sleepSec, 'sleep Seconds')
     
     const a = await who();
     console.log(`${ a } `);
+    //printProgress(`${ a } `);
     const b = await what();
     console.log(`${ a } ${ b } `);
+    //printProgress(`${ a } ${ b }`);
     const c = await where();  
     console.log(`${ a } ${ b } ${ c }`);
+    //printProgress(`${ a } ${ b } ${ c }`);
+    //console.log('')
 
     const obj3 = await what2();
     //console.log(obj3);
 
     if (obj3) {
+      console.log('object?',true);
         sendTransaction(obj3)        
     }
     else{
+      console.log('object?',false);
+      new Timer();
         setTimeout(() => { msg();
         }, 1000 * (sleepSec) );
     }
