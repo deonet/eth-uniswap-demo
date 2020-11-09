@@ -36,7 +36,7 @@ const WETHContractAddress= path1
 const uniswapV2Contract = new web3.eth.Contract(UniswapV2Abi, UniswapV2ContractAddress);
 
 const ETH_SOLD = web3.utils.toHex(1000000000000000); // 0.1ETH
-const MIN_TOKENS = web3.utils.toHex(0.00000000002 * 10 ** 18); // 0.2 DAI
+const MIN_TOKENS = web3.utils.toHex(0.0000000000002 * 10 ** 18); // 0.2 DAI
 
 Date.prototype.addMinutez = function(m) {
     this.setTime(this.getTime() + (m*60*1000));
@@ -107,9 +107,11 @@ const sendTransaction = async (params) => {
         from: addressFrom,
     });
 
-    let transactionNonce = -1
-    transactionNonce = await web3.eth.getTransactionCount(addressFrom)
-    const transactionObject = {
+    let transactionNonce = -1 ;
+
+    try {
+      transactionNonce = await web3.eth.getTransactionCount(addressFrom)
+      const transactionObject = {
         nonce: web3.utils.toHex(transactionNonce),
         gasLimit: web3.utils.toHex(6000000),
         gasPrice: web3.utils.toHex(10000000000),
@@ -118,6 +120,9 @@ const sendTransaction = async (params) => {
         data: exchangeEncodedABI2,
         value: ETH_SOLD
       };
+    } catch (er) {
+      console.log('transactionNonce fail')
+    }
 
     try{
         if ( transactionNonce !== -1) {
@@ -127,7 +132,9 @@ const sendTransaction = async (params) => {
             ])            
         }
     }catch(err){
-        console.error(err)
+        //console.error(err)
+        setTimeout(() => { msg();
+        }, 1000 * (sleepSec) );
     }
 }
 
@@ -182,15 +189,16 @@ async function what2() {
           .value();
         
         let DateFriendly = new Date(element2.inputDt)
-
-        console.log( element , element2.addressUniq , 
-          compare1.length ,
-          element2.title
-        ) ;
           
         let action2
 
         if (compare1.length===0) {
+
+          console.log( element , element2.addressUniq , 
+            compare1.length ,
+            element2.title
+          ) ;
+  
           console.log(DateFriendly.addMinutez(0),'@ input');
           console.log(DateFriendly.addMinutez(10) , '@ target buy');
           let current1 = new Date().addMinutez(7*60)
@@ -224,6 +232,9 @@ async function what2() {
 }
 
   async function msg() {
+    console.log('')
+    console.log('sell eth, buy token')
+    
     const a = await who();
     console.log(`${ a } `);
     const b = await what();
