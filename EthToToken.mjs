@@ -113,8 +113,10 @@ const sendTransaction = async (params) => {
     try {
       transactionNonce = await web3.eth.getTransactionCount(addressFrom);
     } catch (er) {
-      console.log('transactionNonce fail')
-    }
+      console.log('transactionNonce fail');
+      setTimeout(() => { msg();
+      }, 1000 * (sleepSec) );
+  }
 
     try{
       if ( transactionNonce !== -1) {
