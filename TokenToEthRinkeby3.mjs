@@ -284,11 +284,12 @@ const getTBal = async (array) => {
             }else{
                 info2([sleepSec]) 
                 setTimeout(() => { getTBal() }, 1000 * sleepSec )
-            }
-			
+            }			
         }
         else {
             console.log(err); // Dump errors here
+            info2([sleepSec]) ;
+            setTimeout(() => { getTBal() }, 1000 * sleepSec ) ;    
         }
     });
 }
