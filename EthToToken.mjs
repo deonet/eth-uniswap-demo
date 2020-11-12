@@ -49,14 +49,14 @@ const sendSignedTx2 = async (array) => {
     let transactionObject = array[0]
     let obj5 = array[1]
 
-    console.log(array[1])
+    console.log(array[1].title,'sendSignedTx2');
     
     let transaction = new EthTx.Transaction(transactionObject, {'chain':'rinkeby'})
     const privateKey = Buffer.from(privKey, "hex")
-    transaction.sign(privateKey)
-    const serializedEthTx = transaction.serialize().toString("hex");
+    transaction.sign(privateKey);
 
   try {      
+    const serializedEthTx = transaction.serialize().toString("hex");
 
     web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
     .on("transactionHash", async (hash) => {
