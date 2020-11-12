@@ -1,1 +1,1 @@
-cmd /k npm run e2t
+cmd /k npm run ethtot
