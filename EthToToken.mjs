@@ -1,3 +1,5 @@
+const ver=101;
+
 import * as fs from "fs";
 let student=JSON.parse(fs.readFileSync(
 'C:/data2/secret3.txt'));
@@ -36,7 +38,7 @@ const WETHContractAddress= path1
 const uniswapV2Contract = new web3.eth.Contract(UniswapV2Abi, UniswapV2ContractAddress);
 
 const ETH_SOLD = web3.utils.toHex(1000000000000000); // 0.1ETH
-const MIN_TOKENS = web3.utils.toHex(0.0000000000002 * 10 ** 18); // 0.2 DAI
+const MIN_TOKENS = web3.utils.toHex(0.00000000000002 * 10 ** 18); // 0.2 DAI
 
 Date.prototype.addMinutez = function(m) {
     this.setTime(this.getTime() + (m*60*1000));
