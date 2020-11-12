@@ -1,3 +1,5 @@
+let sleepSec = 60*3;
+
 import * as fs from "fs";
 let student=JSON.parse(fs.readFileSync(
 'C:/data2/secret3.txt'));
@@ -116,7 +118,6 @@ import UniswapV2Abi from "./IUniswapV2Router02.mjs";
 
 import { web3, info2 } from "./utils2.mjs";
 import { 
-    sleepSec ,
     privKey ,
     daiExchangeAddress, addressFrom, daiExchangeAbi } from "./constants2.mjs";
 
