@@ -1,4 +1,4 @@
-const ver=101;
+const ver=1116;
 
 import * as fs from "fs";
 let student=JSON.parse(fs.readFileSync(
@@ -49,11 +49,22 @@ const sendSignedTx2 = async (array) => {
     let transactionObject = array[0]
     let obj5 = array[1]
 
-    console.log(array[1].title,'sendSignedTx2');
+    console.log(array[1].title,'sendSignedTx');
+    //console.log(obj5,'');
     
     let transaction = new EthTx.Transaction(transactionObject, {'chain':'rinkeby'})
     const privateKey = Buffer.from(privKey, "hex")
     transaction.sign(privateKey);
+
+    db2.read();
+    let newData = { 
+        tokenName : obj5.title ,
+        token0 : "token0" ,
+        addressUniq : obj5.addressUniq ,
+        tokenValue : 'value2' ,
+        inputDtUnix : obj5.inputDtUnix ,
+        buyDtUnix : new Date().valueOf()
+    };
 
   try {      
     const serializedEthTx = transaction.serialize().toString("hex");
@@ -65,25 +76,24 @@ const sendSignedTx2 = async (array) => {
                 hash
             )}`
         );
-        let newData = { 
-            tokenName : obj5.title ,
-            token0 : "token0" ,
-            addressUniq : obj5.addressUniq ,
-            tokenValue : 'value2',
-            hash : hash
-        };
-        db2.read();
-        let buyCount = db2.get('posts').size().value();
-        if (!buyCount )db2.defaults({ posts: [], }).write();        
-        db2.get('posts').push( newData ).write();
-
     })    
     .on("receipt", (receipt) => {
         //console.log(receipt);
         console.log(
             `transaction received on the network`
         );
-        new Timer();
+        for (let key in receipt) {
+            let value = receipt[key];
+            if('object' !== (typeof value) ){
+                newData["" + key ] = (value) 
+            }
+        }
+
+        let buyCount = db2.get('posts').size().value();
+        if (!buyCount )db2.defaults({ posts: [], }).write();        
+        db2.get('posts').push( newData ).write();
+
+        //new Timer();
         setTimeout(() => { msg();
         }, 1000 * (sleepSec) );    
     });
@@ -220,6 +230,7 @@ async function what2() {
           obj2.addressUniq = element2.addressUniq ;
           obj2.title = element2.title ;
           obj2.inputDtSkim = element2.inputDt ;
+          obj2.inputDtUnix = element2.inputDtUnix ;
           
           if(action2){
             //db2.get('posts').push( obj2 ).write() ;
@@ -267,7 +278,7 @@ class Timer {
 
   async function msg() {
     console.log('')
-    console.log('sell eth, buy token')
+    console.log('sell eth, buy token',ver)
     console.log(sleepSec, 'sleep Seconds')
     
     const a = await who();
@@ -290,7 +301,7 @@ class Timer {
     }
     else{
       console.log('object?',false);
-      new Timer();
+      //new Timer();
         setTimeout(() => { msg();
         }, 1000 * (sleepSec) );
     }
