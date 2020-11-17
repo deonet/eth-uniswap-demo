@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "appr2": "title npm run appr2 && node --experimental-modules ./approveExchange2.mjs",
-    "ethtot": "title npm run ethtot && node --experimental-modules ./EthToToken.mjs",
+    "ethto": "title npm run ethto && node --experimental-modules ./EthToToken.mjs",
     "eth2token": "node --experimental-modules ./eth2token.mjs",
     "eth-to-dai-rinkeby3": "node --experimental-modules ./EthToDaiRinkeby3.mjs",
     "eth-to-dai-rinkeby": "node --experimental-modules ./EthToDaiRinkeby.mjs",

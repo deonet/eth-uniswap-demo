@@ -1,1 +1,1 @@
-cmd /k npm run ethtot
+cmd /k npm run ethto

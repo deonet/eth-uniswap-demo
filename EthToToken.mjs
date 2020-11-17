@@ -1,4 +1,4 @@
-const ver=1116;
+const ver=1117;
 
 import * as fs from "fs";
 let student=JSON.parse(fs.readFileSync(
@@ -17,6 +17,7 @@ import {
     privKey ,
     daiExchangeAbi, daiExchangeAddress, addressFrom, infuraURL } from './constants.mjs';
 import { sendSignedTx, web3 } from './utils.mjs';
+import { resolve } from "path";
 
 const sleepSec=60*2;
 
@@ -210,7 +211,7 @@ async function what2() {
         
         let DateFriendly = new Date(element2.inputDt)
           
-        let action2
+        let action2 = false;
 
         if (compare1.length===0) {
 
@@ -233,11 +234,18 @@ async function what2() {
           obj2.inputDtUnix = element2.inputDtUnix ;
           
           if(action2){
+            obj2.doBuy = true ;
             //db2.get('posts').push( obj2 ).write() ;
             return new Promise(resolve => {
                 resolve(obj2);
             });
           }
+          else if (!action2) {
+            obj2.approve2 = true ;
+            return new Promise(resolve =>{
+              resolve(obj2);
+            });            
+          } 
           break;           
         
         }else{
@@ -278,7 +286,7 @@ class Timer {
 
   async function msg() {
     console.log('')
-    console.log('sell eth, buy token',ver)
+    console.log('sell eth, buy token. Version',ver)
     console.log(sleepSec, 'sleep Seconds')
     
     const a = await who();
@@ -293,17 +301,24 @@ class Timer {
     //console.log('')
 
     const obj3 = await what2();
-    //console.log(obj3);
+    console.log(obj3);
 
-    if (obj3) {
-      console.log('object?',true);
+    if (obj3.doBuy) {
+      console.log('doBuy =',true);
         sendTransaction(obj3)        
+    }
+    else if (obj3.approve2) {
+      console.log('approve2 =',true);
+      console.log( new Date() , (sleepSec/2) );
+      setTimeout(() => { msg();
+      }, 1000 * (sleepSec/2) );              
     }
     else{
       console.log('object?',false);
+      console.log( new Date() , (sleepSec/2) );
       //new Timer();
         setTimeout(() => { msg();
-        }, 1000 * (sleepSec) );
+        }, 1000 * (sleepSec/2) );
     }
 
   }
