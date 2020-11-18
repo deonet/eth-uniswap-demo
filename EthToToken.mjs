@@ -291,13 +291,10 @@ class Timer {
     
     const a = await who();
     console.log(`${ a } `);
-    //printProgress(`${ a } `);
     const b = await what();
     console.log(`${ a } ${ b } `);
-    //printProgress(`${ a } ${ b }`);
     const c = await where();  
     console.log(`${ a } ${ b } ${ c }`);
-    //printProgress(`${ a } ${ b } ${ c }`);
     //console.log('')
 
     const obj3 = await what2();
