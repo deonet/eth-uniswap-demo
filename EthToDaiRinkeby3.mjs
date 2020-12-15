@@ -19,28 +19,32 @@ const sendSignedTx2 = (transactionObject) =>{
     const privateKey = Buffer.from(privKey, "hex")
     transaction.sign(privateKey)
     const serializedEthTx = transaction.serialize().toString("hex")
-    web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
-    .on("transactionHash", async (hash) => {
-        console.log(
-            `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
-                hash
-            )}`
-        );
-    })
-    .on("receipt", (receipt) => {
-        console.log(
-            `transaction received on the network`
-        );
-        info2([
-            sleepSec
-        ])
 
-        setTimeout(() => {
-            getBal()
+    try {        
 
-        }, 1000 * sleepSec );
+        web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
+        .on("transactionHash", async (hash) => {
+            console.log(
+                `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
+                    hash
+                )}`
+            );
+        })
+        .on("receipt", (receipt) => {
+            console.log(
+                `transaction received on the network`
+            );
+            info2([sleepSec]);
+            setTimeout(() => {getBal()}, 1000 * sleepSec );
+        });
 
-    });
+    } catch (error) {
+        info2([sleepSec]);
+        setTimeout(() => {getBal()}, 1000 * sleepSec );        
+    }
+
+
+
 }
 
 const sendTransaction = async (array) => {
