@@ -174,45 +174,50 @@ const sendSignedTx2 = (transactionObject,params) =>{
     const privateKey = Buffer.from(privKey, "hex")
     transaction.sign(privateKey)
     const serializedEthTx = transaction.serialize().toString("hex")
-    web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
-    .on("transactionHash", async (hash) => {
-        console.log(
-            `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
-                hash
-            )}`
-        );
-    })
-    .on("receipt", (receipt) => {
 
-        console.log(
-            `transaction received on the network`
-        );
-
-        let newData = { 
-            tokenName : tokenName ,
-            token0 : token0 ,
-            token : TokenContractAddress2 ,
-            tokenValue : value2
-        };
-
-        for (let key in receipt) {
-            let value = receipt[key];
-            // Use `key` and `value`
-            //console.log(key);console.log(' => ' , (typeof value) )
-            if('object' !== (typeof value) ){
-                newData["" + key ] = (value) 
+    try {
+        web3.eth.sendSignedTransaction(`0x${serializedEthTx}`)
+        .on("transactionHash", async (hash) => {
+            console.log(
+                `transaction sent to the network, waiting for confirmations, ${JSON.stringify(
+                    hash
+                )}`
+            );
+        })
+        .on("receipt", (receipt) => {
+            console.log(
+                `transaction received on the network`
+            );
+            let newData = { 
+                tokenName : tokenName ,
+                token0 : token0 ,
+                token : TokenContractAddress2 ,
+                tokenValue : value2
+            };
+            for (let key in receipt) {
+                let value = receipt[key];
+                // Use `key` and `value`
+                //console.log(key);console.log(' => ' , (typeof value) )
+                if('object' !== (typeof value) ){
+                    newData["" + key ] = (value) 
+                }
             }
-        }
-        //newA.push({productId : 1 , price : 100 , discount : 10});
+            //newA.push({productId : 1 , price : 100 , discount : 10});
 
-        db.get('posts')
-        .push(newData)
-        .write()
+            db.get('posts')
+            .push(newData)
+            .write()
 
-        info2([sleepSec]) 
-        setTimeout(() => { getTBal() }, 1000 * sleepSec )
+            info2([sleepSec]) 
+            setTimeout(() => { getTBal() }, 1000 * sleepSec )
 
-    });    
+        }); 
+
+    } catch (error) {
+        info2([sleepSec]) ;
+        setTimeout(() => { getTBal() }, 1000 * sleepSec );        
+    }
+
     /**
      * 
     .on('receipt', console.log);

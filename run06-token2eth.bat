@@ -1,1 +1,1 @@
-cmd /k npm run t2e3
+cmd /k npm run TokenToEthRinkeby3
