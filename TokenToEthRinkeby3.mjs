@@ -183,6 +183,7 @@ const sendSignedTx2 = (transactionObject,params) =>{
                     hash
                 )}`
             );
+            console.log('(DEC16) DO receipt');
         })
         .on("receipt", (receipt) => {
             console.log(
@@ -203,7 +204,6 @@ const sendSignedTx2 = (transactionObject,params) =>{
                 }
             }
             //newA.push({productId : 1 , price : 100 , discount : 10});
-
             db.get('posts')
             .push(newData)
             .write()
