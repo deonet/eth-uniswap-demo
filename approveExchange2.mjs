@@ -6,7 +6,7 @@ const public2 = student.public;
 
 import FileSync from 'lowdb/adapters/FileSync.js';
 import lowdb from 'lowdb' ;
-let db = lowdb(new FileSync('dbAppr.json'));
+let db = lowdb(new FileSync(public2 + 'dbAppr.json'));
 db.defaults({ posts: [], }).write() ;
 
 import EthTx from 'ethereumjs-tx'
