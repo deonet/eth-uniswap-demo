@@ -181,8 +181,17 @@ const sendTransaction = async () => {
   console.log(action2);
   
   let transactionNonce = -1 ;
-  transactionNonce = await web3.eth.getTransactionCount(addressFrom) ;
-
+  try {
+    transactionNonce = await web3.eth.getTransactionCount(addressFrom);
+    console.log('transactionNonce', transactionNonce);
+  } catch (er) {
+    console.log('transactionNonce fail');
+    //setTimeout(() => { sendTransaction();
+    //}, 1000 * 60 );
+  }
+  console.log('transactionNonce bottom', transactionNonce);
+  //sendTransaction();
+  
   daiTokenAddress2 = await getTokenAddress();
   let approveEncodedABI3 = await getApproveEncodedABI(daiTokenAddress2);
 
